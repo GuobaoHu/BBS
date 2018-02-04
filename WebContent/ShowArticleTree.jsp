@@ -1,12 +1,59 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
 <%@ page import="java.sql.*" %>
+<%!
+//this String is for output
+String output = "";
+//this function is for finding this id'sons,and output them
+private void tree(Connection conn, int id, int level) {
+	Statement stmt = null;
+	ResultSet rs = null;
+	String preStr = "";
+	for(int i=0; i<level; i++) {
+		preStr = preStr + "----";
+	}
+	try {
+		stmt = conn.createStatement();
+		//find this id's sons
+		rs = stmt.executeQuery("select * from article where pid=" + id);
+		while(rs.next()) {
+			output = output + "<tr><td>" + rs.getInt("id") + "</td><td>" + preStr + 
+					"<a href='ShowArticleDetail.jsp?id=" + rs.getInt("id") + "'>" + rs.getString("title") + "</a>" +
+					"</td></tr>";
+			if(rs.getInt("isleaf") != 0) {
+				tree(conn, rs.getInt("id"), level+1);
+			}
+		}
+	} catch (SQLException e) {
+		e.printStackTrace();
+	} finally {
+		try {
+			if(rs != null) rs.close();
+			if(stmt != null) stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+}
+%>
+
 <%
 	Class.forName("com.mysql.jdbc.Driver");
 	String connStr = "jdbc:mysql://localhost:3306/bbs?user=root&password=root";
 	Connection conn = DriverManager.getConnection(connStr);
 	Statement stmt = conn.createStatement();
-	ResultSet rs = stmt.executeQuery("select * from article");
+	ResultSet rs = stmt.executeQuery("select * from article where pid=0");
+	while(rs.next()) {
+		output = output + "<tr><td>" + rs.getInt("id") + "</td><td>" + 
+				"<a href='ShowArticleDetail.jsp?id=" + rs.getInt("id") + "'>" + rs.getString("title") + "</a>" +
+				"</td></tr>";
+		if(rs.getInt("isleaf") != 0) {
+			tree(conn, rs.getInt("id"), 1);
+		}
+	}
+	if(rs != null) rs.close();
+	if(stmt != null) stmt.close();
+	if(conn != null) conn.close();
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -26,22 +73,8 @@
 <body>
 	<div class="container">
 		<table class="table">
-			<%
-				while(rs.next()) {
-			%>
-				<tr>
-				<td><%= rs.getInt("id") %></td>
-				<td><%= rs.getString("cont") %></td>
-				</tr>
-			<%
-				}
-			%>
+			<%= output %>
 		</table>
 	</div>
 </body>
-<% 
-	rs.close();
-	stmt.close();
-	conn.close(); 
-%>
 </html>
