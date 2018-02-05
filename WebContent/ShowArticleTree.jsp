@@ -77,4 +77,5 @@ private void tree(Connection conn, int id, int level) {
 		</table>
 	</div>
 </body>
+<% output=""; %>
 </html>

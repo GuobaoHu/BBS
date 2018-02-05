@@ -41,9 +41,16 @@ rs.next();
 		</tr>
 		<tr>
 		<td>Detail</td>
-		<td><%= rs.getString("cont") %></td>
+		<%--this is for new line --%>
+		<%String cont = rs.getString("cont").replaceAll("\\n", "<br>"); %>
+		<td><%=cont%></td>
+		</tr>
+		<tr>
+		<td>Isleaf</td>
+		<td><%= rs.getString("isleaf") %></td>
 		</tr>
 	</table>
+	<a href="Reply.jsp?id=<%=rs.getInt("id") %>&rootid=<%=rs.getInt("rootid") %>&isleaf=<%=rs.getInt("isleaf")%>">回复</a>
 	</div>
 </body>
 <%
