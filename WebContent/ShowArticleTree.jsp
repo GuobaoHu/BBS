@@ -75,6 +75,7 @@ private void tree(Connection conn, int id, int level) {
 		<table class="table">
 			<%= output %>
 		</table>
+		<a class="btn btn-info" href="NewSubject.jsp" role="button">创建新话题</a>
 	</div>
 </body>
 <% output=""; %>
