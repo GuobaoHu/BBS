@@ -1,9 +1,13 @@
+<%@page import="javax.websocket.Session"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
 <%@ page import="java.sql.*" %>
 <%!
 //this String is for output
 String output = "";
+//is admin or not		
+boolean isAdmin = false;
+		
 //this function is for finding this id'sons,and output them
 private void tree(Connection conn, int id, int level) {
 	Statement stmt = null;
@@ -16,10 +20,15 @@ private void tree(Connection conn, int id, int level) {
 		stmt = conn.createStatement();
 		//find this id's sons
 		rs = stmt.executeQuery("select * from article where pid=" + id);
+		
 		while(rs.next()) {
+			String delStr = "";
+			if(isAdmin) {
+				delStr = "<td><a href='Delete.jsp?id=" + rs.getInt("id") + "&pid=" + rs.getInt("pid") + "'>删除</a>" + "</td>";
+			}
 			output = output + "<tr><td>" + rs.getInt("id") + "</td><td>" + preStr + 
 					"<a href='ShowArticleDetail.jsp?id=" + rs.getInt("id") + "'>" + rs.getString("title") + "</a>" +
-					"</td><td><a href='Delete.jsp?id=" + rs.getInt("id") + "&pid=" + rs.getInt("pid") + "'>删除</a>" + "</td></tr>";
+					"</td>" + delStr + "</tr>";
 			if(rs.getInt("isleaf") != 0) {
 				tree(conn, rs.getInt("id"), level+1);
 			}
@@ -36,7 +45,15 @@ private void tree(Connection conn, int id, int level) {
 	}
 }
 %>
-
+<%
+//this is for checking if is admin
+String admin = (String)session.getAttribute("admin");
+if(admin != null && admin.equals("true")) {
+	isAdmin = true;
+} else {
+	isAdmin = false;
+}
+%>
 <%
 	Class.forName("com.mysql.jdbc.Driver");
 	String connStr = "jdbc:mysql://localhost:3306/bbs?user=root&password=root";
@@ -44,9 +61,12 @@ private void tree(Connection conn, int id, int level) {
 	Statement stmt = conn.createStatement();
 	ResultSet rs = stmt.executeQuery("select * from article where pid=0");
 	while(rs.next()) {
+		String delStr = "";
+		if(isAdmin) {
+			delStr = "<td><a href='Delete.jsp?id=" + rs.getInt("id") + "&pid=" + rs.getInt("pid") + "'>删除</a>" + "</td>";
+		}
 		output = output + "<tr><td>" + rs.getInt("id") + "</td><td>" + 
-				"<a href='ShowArticleDetail.jsp?id=" + rs.getInt("id") + "'>" + rs.getString("title") + "</a></td><td>" +
-				"<a href='Delete.jsp?id=" + rs.getInt("id") + "&pid=" + rs.getInt("pid") + "'>删除</a>" + "</td></tr>";
+				"<a href='ShowArticleDetail.jsp?id=" + rs.getInt("id") + "'>" + rs.getString("title") + "</a></td>" + delStr + "</tr>";
 		if(rs.getInt("isleaf") != 0) {
 			tree(conn, rs.getInt("id"), 1);
 		}
@@ -79,4 +99,5 @@ private void tree(Connection conn, int id, int level) {
 	</div>
 </body>
 <% output=""; %>
+<% isAdmin = false; %>
 </html>
