@@ -56,7 +56,7 @@ conn.setAutoCommit(true);
 if(preStmt != null) preStmt.close();
 if(stmtUpdate != null) stmtUpdate.close();
 if(conn != null) conn.close();
-response.sendRedirect("ShowArticleTree.jsp");
+response.sendRedirect("ShowArticlePanel.jsp");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
