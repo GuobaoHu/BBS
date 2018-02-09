@@ -36,7 +36,14 @@ private void del(Connection conn, int id) {
 }
 
 %>
-
+<% 
+//修复漏洞，防止人直接通过 Delete.jsp?id=*&pid=*这种方式进行删除操作
+String admin = (String)session.getAttribute("admin");
+if(admin == null || !admin.equals("true") ) {
+	out.println("你不是管理员！");
+	return;
+}
+%>
 <%
 Class.forName("com.mysql.jdbc.Driver");
 Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/bbs?user=root&password=root");
