@@ -9,6 +9,14 @@ Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/bbs?u
 //get the parameter from request
 String title = request.getParameter("title");
 String cont = request.getParameter("cont");
+if(title == null || title.trim().equals("")) {
+	out.println("title不能为空");
+	return;
+}
+if(cont == null || cont.trim().equals("")) {
+	out.println("title不能为空");
+	return;
+}
 
 //make the insert action and alter action a transaction.
 conn.setAutoCommit(false);

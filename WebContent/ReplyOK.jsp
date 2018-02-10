@@ -5,12 +5,26 @@
 Class.forName("com.mysql.jdbc.Driver");
 Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/bbs?user=root&password=root");
 
-//get the parameter from request
-int pid = Integer.parseInt(request.getParameter("id"));
-int rootId = Integer.parseInt(request.getParameter("rootid"));
-int isleaf = Integer.parseInt(request.getParameter("isleaf"));
+//get the parameter from request,程序健壮性
+int pid, rootId, isleaf;
+try {
+	pid = Integer.parseInt(request.getParameter("id"));
+	rootId = Integer.parseInt(request.getParameter("rootid"));
+	isleaf = Integer.parseInt(request.getParameter("isleaf"));
+} catch (NumberFormatException e) {
+	out.println("输入的数字格式不对，请检查pid、rootid、isleaf！");
+	return;
+}
 String title = request.getParameter("title");
 String cont = request.getParameter("cont");
+if(title == null ||title.trim().equals("")) {
+	out.println("title不能为空！");
+	return;
+}
+if(cont == null ||cont.trim().equals("")) {
+	out.println("title不能为空！");
+	return;
+}
 
 //make the insert action and alter action a transaction.
 conn.setAutoCommit(false);

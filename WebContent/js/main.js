@@ -57,6 +57,28 @@ $().ready(function() {
 			}
 		}
 	});
+	$("#reply_form").validate({
+		rules: {
+			title: {
+				required: true,
+				maxlength:20
+			},
+			cont: {
+				required: true,
+				maxlength: 300
+			},
+		},
+		messages: {
+			title: {
+				required: "请输入标题",
+				maxlength: jQuery.format("标题不能超过{0}个字 符")
+			},
+			cont: {
+				required: "请输入内容",
+				maxlength: jQuery.format("内容不能超过{0}个字 符")
+			},
+		}
+	});
 });
 $(function() {
 	$("#register_btn").click(function() {

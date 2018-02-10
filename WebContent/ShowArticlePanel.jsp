@@ -8,7 +8,7 @@ public static final int PAGESIZE = 3;
 %>
 
 <%
-//this is for page
+//this is for pagination
 String pageNoStr = request.getParameter("pageNo");
 int pageNo;
 if(pageNoStr == null || pageNoStr.equals("")) {
@@ -74,33 +74,58 @@ ResultSet rs = stmt.executeQuery("select * from article where pid=0 order by pda
 			}
 			%>
 		</table>
-		<a href="ShowArticlePanel.jsp?pageNo=1" class="btn btn-primary btn-sm" role="button">首页</a>
-		<a href="ShowArticlePanel.jsp?pageNo=<%= totalPageNo %>" class="btn btn-primary btn-sm" role="button">尾页</a>
+		<a href="ShowArticlePanel.jsp?pageNo=1" class="btn btn-primary btn-xs" role="button">首页</a>
+		<a href="ShowArticlePanel.jsp?pageNo=<%= totalPageNo %>" class="btn btn-primary btn-xs" role="button">尾页</a>
+		
+		<a href="ShowArticlePanel.jsp?pageNo=<%= pageNo-1 %>" class="btn btn-primary btn-xs <%=(totalPageNo==1 || pageNo==1) ? "disabled" : "" %>" role="button">上一页</a>
+		<a href="ShowArticlePanel.jsp?pageNo=<%= pageNo+1 %>" class="btn btn-primary btn-xs <%=(totalPageNo==1 || pageNo==totalPageNo) ? "disabled" : ""%>" role="button">下一页</a>
+				
+		共<%= totalPageNo %>页，第<%= pageNo %>页
+		<br><br>
+		
+		<!-- 选择框页码转换 -->		
+		<select id="pageIndex">
 		<%
-		if(totalPageNo == 1) {
+		for(int i=1; i<=totalPageNo; i++) {
 		%>
-			<a href="ShowArticlePanel.jsp?pageNo=1" class="btn btn-primary btn-sm disabled" role="button">上一页</a>
-			<a href="ShowArticlePanel.jsp?pageNo=1" class="btn btn-primary btn-sm disabled" role="button">下一页</a>
-		<%
-		} else if(pageNo == 1) {
-		%>
-			<a href="ShowArticlePanel.jsp?pageNo=1" class="btn btn-primary btn-sm disabled" role="button">上一页</a>
-			<a href="ShowArticlePanel.jsp?pageNo=<%= pageNo+1 %>" class="btn btn-primary btn-sm" role="button">下一页</a>
-		<%	
-		} else if(pageNo > 1 && pageNo < totalPageNo) {
-		%>
-			<a href="ShowArticlePanel.jsp?pageNo=<%= pageNo-1 %>" class="btn btn-primary btn-sm" role="button">上一页</a>
-			<a href="ShowArticlePanel.jsp?pageNo=<%= pageNo+1 %>" class="btn btn-primary btn-sm" role="button">下一页</a>
-		<%
-		} else if(pageNo == totalPageNo) {
-		%>
-			<a href="ShowArticlePanel.jsp?pageNo=<%= pageNo-1 %>" class="btn btn-primary btn-sm" role="button">上一页</a>
-			<a href="ShowArticlePanel.jsp?pageNo=<%= totalPageNo %>" class="btn btn-primary btn-sm disabled" role="button">下一页</a>
+			<option value="<%=i%>" <%= pageNo==i ? "selected" :"" %>>第&nbsp;&nbsp;<%= i %>&nbsp;&nbsp;页
 		<%
 		}
-		%>		
-		共<%= totalPageNo %>页，第<%= pageNo %>页
+		%>
+		</select>
+		
+		<br>
+		<br>
+		<!-- 输入框输入页码跳转 -->
+		<form action="ShowArticlePanel.jsp" method="get">
+			<div class="row">
+				<div class="form-inline">
+					<input type="text" size="4" name="pageNo" value="<%=pageNo%>">
+					<button type="submit" class="btn btn-primary btn-xs">跳转</button>
+				</div>
+			</div>
+		</form>
+		
+		<!-- 按钮显示 -->
+		<br>
+		<br>
+		<%
+		for(int i=1; i<=totalPageNo; i++) {
+		%>
+			<a href="ShowArticlePanel.jsp?pageNo=<%= i %>" class="btn btn-primary btn-xs" role="button"><%= i %></a>
+		<%
+		}
+		%>
 	</div>
+	
+	<!-- 响应select的change事件 -->
+	<script type="text/javascript">
+	$("#pageIndex").change(function () {  
+            var page = $(this).children('option:selected').val();  
+            window.location.href="ShowArticlePanel.jsp?pageNo=" + page;            
+        });
+	</script>
+	
 </body>
 <%
 if(rs != null) rs.close();

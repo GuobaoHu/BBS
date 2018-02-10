@@ -49,8 +49,14 @@ Class.forName("com.mysql.jdbc.Driver");
 Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/bbs?user=root&password=root");
 
 //get the parameter from request
-int id = Integer.parseInt(request.getParameter("id"));
-int pid = Integer.parseInt(request.getParameter("pid"));
+int id, pid;
+try {
+	id = Integer.parseInt(request.getParameter("id"));
+	pid = Integer.parseInt(request.getParameter("pid"));
+} catch (NumberFormatException e) {
+	out.println("请检查id、pid的格式！");
+	return;
+}
 
 //make the delete action and alter action a transaction.
 conn.setAutoCommit(false);

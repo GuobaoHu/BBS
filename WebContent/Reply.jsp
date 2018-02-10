@@ -3,21 +3,38 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Reply</title>
-<link href="<%= this.getServletContext().getContextPath() %>/css/bootstrap.min.css" rel="stylesheet" media="screen">
-<!-- 这一行必须在下面一行前面 -->
-<script src="<%= this.getServletContext().getContextPath() %>/js/jquery-3.2.1.min.js"></script>
-<script src="<%= this.getServletContext().getContextPath() %>/js/bootstrap.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-  <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-<![endif]-->
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Reply</title>
+	<!-- Bootstrap 核心 CSS 文件 -->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<!--font-awesome 核心CSS 文件，该文件可以用于显示输入框里面一些小的icon-->
+	<link href="css/font-awesome.min.css" rel="stylesheet">
+	<!-- 在bootstrap.min.js 之前引入 -->
+	<script src="js/jquery-3.2.1.min.js"></script>
+	<!-- Bootstrap 核心 JavaScript 文件 -->
+	<script src="js/bootstrap.min.js"></script>
+	<!--jquery.validate-->
+	<script type="text/javascript" src="js/jquery.validate.min.js" ></script>
+	<!-- 添加自定义的表单验证，可以参考http://www.runoob.com/jquery/jquery-plugin-validate.html -->
+	<script type="text/javascript" src="js/additional-methods.js" ></script>
+	<!-- 表单验证的出错的默认消息 -->
+	<script type="text/javascript" src="js/messages_zh.js" ></script>
+	<!-- 表单验证，以及同一个页面登录注册之间的切换的实现 -->
+	<script type="text/javascript" src="js/main.js" ></script>
+	<style type="text/css">
+		body{background: url(img/4.jpg) no-repeat;background-size: cover;font-size: 16px;}
+		.form{background: rgba(255,255,255,0.2);width:400px;margin:100px auto;}
+		#reply_form{display: block;}			
+		.fa{display: inline-block;top: 27px;left: 6px;position: relative;color: #ccc;}
+		input[type="text"],input[type="password"]{padding-left:26px;}
+		.checkbox{padding-left:21px;}
+		/* 表单验证不符合时，提示消息字体颜色 */
+		.error{	color:red;}
+	</style>
 </head>
 <body>
 	<div class="container">
-		<form action="ReplyOK.jsp" method="get" class="form-horizontal" role="form">
+		<form action="ReplyOK.jsp" id="reply_form" method="get" class="form-horizontal" role="form">
 			<input type="hidden" name="id" value="<%= request.getParameter("id") %>">
 			<input type="hidden" name="rootid" value="<%=request.getParameter("rootid") %>">
 			<input type="hidden" name="isleaf" value="<%=request.getParameter("isleaf") %>">

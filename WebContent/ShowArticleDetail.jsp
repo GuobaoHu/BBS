@@ -9,7 +9,14 @@ Connection conn = DriverManager.getConnection(connStr);
 Statement stmt = conn.createStatement();
 
 String strId = request.getParameter("id");
-ResultSet rs = stmt.executeQuery("select * from article where id=" + strId);
+int id;
+try {
+	id = Integer.parseInt(strId);
+} catch (NumberFormatException e) {
+	out.println("请检查数字格式!");
+	return;
+}
+ResultSet rs = stmt.executeQuery("select * from article where id=" + id);
 rs.next();
 %>
 
